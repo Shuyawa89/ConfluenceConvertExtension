@@ -34,7 +34,7 @@ export class MarkdownConverter {
         // 画像処理のカスタムルールを追加
         this.turndownService.addRule('images', {
             filter: 'img',
-            replacement: (content, node) => {
+            replacement: (_content, node) => {
                 const img = node as HTMLImageElement;
                 const src = this.extractImageSrc(img);
                 const alt = img.alt || '';
@@ -69,5 +69,24 @@ export class MarkdownConverter {
     public convert(html: string): string {
         const cleanHtml = this.preprocessor.process(html);
         return this.turndownService.turndown(cleanHtml);
+    }
+
+    /**
+     * DOM要素をMarkdownに変換する
+     * 選択範囲の変換などに使用される
+     */
+    public convertFromElement(element: Element): string {
+        // 元の要素を変更しないようにクローンを作成
+        const clonedElement = element.cloneNode(true) as Element;
+
+        // 新しいDocumentを作成してクローンを追加
+        const doc = document.implementation.createHTMLDocument('');
+        doc.body.appendChild(clonedElement);
+
+        // HTMLフィルターを適用
+        this.preprocessor.processDocument(doc);
+
+        // Markdownに変換
+        return this.turndownService.turndown(doc.body.innerHTML);
     }
 }
