@@ -43,6 +43,11 @@
   border: 1px solid #2196f3;
 }
 
+.status.copied {
+  color: #9c27b0;
+  border: 1px solid #9c27b0;
+}
+
 .error-message {
   color: #f44336;
   font-size: 0.9rem;

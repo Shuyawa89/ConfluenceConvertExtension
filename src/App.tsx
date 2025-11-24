@@ -80,6 +80,28 @@ function App() {
     URL.revokeObjectURL(url);
   }
 
+  const handleCopy = async (): Promise<void> => {
+    if (!markdown) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(markdown);
+      // 一時的にステータスを表示するなどのフィードバックがあると良いが、
+      // ここでは簡易的にボタンのテキストを変えるなどの対応をするか、
+      // あるいはアラートを出すか。
+      // 今回はシンプルに実装する。
+      const originalStatus = status;
+      setStatus(UIStatus.COPIED);
+      setTimeout(() => {
+        setStatus(originalStatus);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      setError('Failed to copy to clipboard');
+    }
+  }
+
   const getStatusClass = (status: UIStatusType): string => {
     return `status ${status.toLowerCase()}`;
   }
@@ -107,6 +129,9 @@ function App() {
       />
 
       <div className="actions">
+        <button onClick={handleCopy} disabled={status !== UIStatus.SUCCESS || !markdown}>
+          Copy to Clipboard
+        </button>
         <button onClick={handleDownload} disabled={status !== UIStatus.SUCCESS || !markdown}>
           Download Markdown
         </button>
