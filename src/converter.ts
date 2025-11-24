@@ -1,11 +1,18 @@
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
+import {
+    HtmlPreprocessor,
+    RemoveStickyHeaderTableFilter,
+    NormalizeTableStructureFilter,
+    CleanTableCellsFilter
+} from './html-filters';
 
 /**
  * HTMLをMarkdownに変換するサービス
  */
 export class MarkdownConverter {
     private turndownService: TurndownService;
+    private preprocessor: HtmlPreprocessor;
 
     constructor() {
         this.turndownService = new TurndownService({
@@ -16,6 +23,13 @@ export class MarkdownConverter {
 
         // GitHub Flavored Markdown (GFM) を有効にする
         this.turndownService.use(gfm);
+
+        // HTML前処理のセットアップ
+        this.preprocessor = new HtmlPreprocessor([
+            new RemoveStickyHeaderTableFilter(),
+            new NormalizeTableStructureFilter(),
+            new CleanTableCellsFilter()
+        ]);
 
         // 画像処理のカスタムルールを追加
         this.turndownService.addRule('images', {
@@ -28,7 +42,16 @@ export class MarkdownConverter {
                 // Markdownの画像表記で返す
                 return `![${alt}](${src})`;
             }
+        });
 
+        // テーブル内のbrタグはHTMLのまま出力する（Markdownの改行だとテーブルが壊れるため）
+        this.turndownService.addRule('tableBr', {
+            filter: (node) => {
+                return node.nodeName === 'BR' && (node.closest('table') !== null);
+            },
+            replacement: () => {
+                return '<br>';
+            }
         });
     }
 
@@ -44,6 +67,7 @@ export class MarkdownConverter {
      * HTMLをMarkdownに変換する
      */
     public convert(html: string): string {
-        return this.turndownService.turndown(html);
+        const cleanHtml = this.preprocessor.process(html);
+        return this.turndownService.turndown(cleanHtml);
     }
 }
