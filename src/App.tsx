@@ -12,6 +12,12 @@ function App() {
     convertCurrentPage();
   }, []);
 
+  const isConfluencePage = (url: string | undefined): boolean => {
+    if (!url) return false;
+    // Atlassian Cloud Confluence または /wiki/ パスを含むURL
+    return url.includes('.atlassian.net') || url.includes('/wiki/');
+  };
+
   const convertCurrentPage = async () => {
     setStatus(UIStatus.LOADING);
     setError(null);
@@ -23,6 +29,11 @@ function App() {
 
       if (!tab?.id) {
         throw new Error(ErrorMessages.NO_ACTIVE_TAB);
+      }
+
+      // Confluenceページかどうかをチェック
+      if (!isConfluencePage(tab.url)) {
+        throw new Error('このページはConfluenceページではありません。Confluenceページで拡張機能を使用してください。');
       }
 
       // Content Script にメッセージを送信
