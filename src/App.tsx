@@ -9,7 +9,19 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    convertCurrentPage();
+    // 選択範囲のMarkdownがストレージにあるかチェック
+    chrome.storage.local.get(['selectionMarkdown'], (result: { selectionMarkdown?: string }) => {
+      if (result.selectionMarkdown) {
+        // 選択範囲のMarkdownを表示
+        setMarkdown(result.selectionMarkdown);
+        setStatus(UIStatus.SUCCESS);
+        // ストレージをクリア
+        chrome.storage.local.remove(['selectionMarkdown']);
+      } else {
+        // ページ全体を変換
+        convertCurrentPage();
+      }
+    });
   }, []);
 
   const convertCurrentPage = async () => {
