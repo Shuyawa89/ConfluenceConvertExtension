@@ -88,9 +88,7 @@ describe('MarkdownConverter', () => {
         // ヘッダーが1回だけ出現することを確認
         const headerRow = '| **テスト表** | **カラム1** | **カラム2** |';
         const occurrences = (markdown.match(new RegExp(headerRow.replace(/\|/g, '\\|').replace(/\*/g, '\\*'), 'g')) || []).length;
-        if (occurrences !== 1) {
-            throw new Error(`Expected header to appear exactly once, but found ${occurrences} times.\nMarkdown:\n${markdown}`);
-        }
+        expect(occurrences, 'ヘッダーは正確に1回だけ出現するべきです').toBe(1);
 
         expect(markdown).toContain(headerRow);
         expect(markdown).toContain('| --- | --- | --- |');

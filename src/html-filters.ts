@@ -61,13 +61,7 @@ export class CleanTableCellsFilter implements HtmlFilter {
     private unwrapSortableDivs(cell: Element): void {
         const sortableDivs = cell.querySelectorAll('.ak-renderer-tableHeader-sortable-column');
         sortableDivs.forEach(div => {
-            const parent = div.parentNode;
-            if (parent) {
-                while (div.firstChild) {
-                    parent.insertBefore(div.firstChild, div);
-                }
-                parent.removeChild(div);
-            }
+            div.replaceWith(...div.childNodes);
         });
     }
 
@@ -79,17 +73,11 @@ export class CleanTableCellsFilter implements HtmlFilter {
     private convertParagraphsToBr(cell: Element, doc: Document): void {
         const paragraphs = cell.querySelectorAll('p');
         paragraphs.forEach((p, index) => {
-            const br = doc.createElement('br');
-            const parent = p.parentNode;
-            if (parent) {
-                while (p.firstChild) {
-                    parent.insertBefore(p.firstChild, p);
-                }
-                if (index < paragraphs.length - 1) {
-                    parent.insertBefore(br, p);
-                }
-                parent.removeChild(p);
+            const children = Array.from(p.childNodes);
+            if (index < paragraphs.length - 1) {
+                children.push(doc.createElement('br'));
             }
+            p.replaceWith(...children);
         });
     }
 }
