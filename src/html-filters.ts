@@ -96,12 +96,23 @@ export class HtmlPreprocessor {
         this.filters.push(filter);
     }
 
+    /**
+     * HTML文字列を処理してクリーンなHTMLを返す
+     */
     process(html: string): string {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
 
-        this.filters.forEach(filter => filter.filter(doc));
+        this.processDocument(doc);
 
         return doc.body.innerHTML;
+    }
+
+    /**
+     * Document型を直接処理する
+     * DOM要素から変換する場合に使用される
+     */
+    processDocument(doc: Document): void {
+        this.filters.forEach(filter => filter.filter(doc));
     }
 }

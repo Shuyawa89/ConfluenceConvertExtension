@@ -1,6 +1,9 @@
 // アクション名の定数定義
 export const MessageActions = {
     CONVERT_TO_MARKDOWN: 'CONVERT_TO_MARKDOWN',
+    CONVERT_SELECTION_TO_MARKDOWN: 'CONVERT_SELECTION_TO_MARKDOWN',
+    COPY_TO_CLIPBOARD: 'COPY_TO_CLIPBOARD',
+    SHOW_MARKDOWN_IN_POPUP: 'SHOW_MARKDOWN_IN_POPUP',
 } as const;
 
 // アクション名の型定義 (MessageActionsの値のユニオン型)
@@ -24,6 +27,7 @@ export const ErrorMessages = {
     CONNECTION_FAILED: 'ページとの通信に失敗しました。ページをリロードして再試行してください。',
     CLIPBOARD_COPY_FAILED: 'クリップボードへのコピーに失敗しました。',
     UNKNOWN_ERROR: '予期せぬエラーが発生しました。',
+    NO_SELECTION: '選択範囲が見つかりません。テキストを選択してから再試行してください。',
 } as const;
 
 // リクストメッセージの型
