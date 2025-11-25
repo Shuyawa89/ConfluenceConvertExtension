@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { MessageActions, UIStatus, ErrorMessages } from './types'
 import type { UIStatusType, ExtensionResponse, ExtensionMessage } from './types';
+import { getUrlPatterns } from './storage'
+import { testUrlAgainstPattern } from './urlPatternUtils'
+import { ERROR_MESSAGES } from './constants'
 
 function App() {
   const [markdown, setMarkdown] = useState<string>('');
@@ -11,6 +14,19 @@ function App() {
   useEffect(() => {
     convertCurrentPage();
   }, []);
+
+  const isConfluencePage = async (url: string | undefined): Promise<boolean> => {
+    if (!url) return false;
+
+    try {
+      const patterns = await getUrlPatterns();
+      return patterns.some(pattern => testUrlAgainstPattern(url, pattern));
+    } catch (error) {
+      console.error('Failed to load URL patterns:', error);
+      // フォールバック: デフォルトのチェック
+      return url.includes('.atlassian.net') || url.includes('/wiki/');
+    }
+  };
 
   const convertCurrentPage = async () => {
     setStatus(UIStatus.LOADING);
@@ -23,6 +39,11 @@ function App() {
 
       if (!tab?.id) {
         throw new Error(ErrorMessages.NO_ACTIVE_TAB);
+      }
+
+      // Confluenceページかどうかをチェック
+      if (!(await isConfluencePage(tab.url))) {
+        throw new Error(ERROR_MESSAGES.NOT_CONFLUENCE_PAGE);
       }
 
       // Content Script にメッセージを送信

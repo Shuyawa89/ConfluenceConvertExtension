@@ -1,4 +1,5 @@
 import TurndownService from 'turndown';
+// @ts-expect-error - turndown-plugin-gfm has no type definitions
 import { gfm } from 'turndown-plugin-gfm';
 import {
     HtmlPreprocessor,
