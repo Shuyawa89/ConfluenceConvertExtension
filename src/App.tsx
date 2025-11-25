@@ -94,11 +94,12 @@ function App() {
       const originalStatus = status;
       setStatus(UIStatus.COPIED);
       setTimeout(() => {
-        setStatus(originalStatus);
+        setStatus(currentStatus => currentStatus === UIStatus.COPIED ? originalStatus : currentStatus);
       }, 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
-      setError('Failed to copy to clipboard');
+      setError(ErrorMessages.CLIPBOARD_COPY_FAILED);
+      setStatus(UIStatus.ERROR);
     }
   }
 
