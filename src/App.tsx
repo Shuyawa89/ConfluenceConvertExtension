@@ -69,7 +69,7 @@ function App() {
         } else if (response) {
           resolve(response as ExtensionResponse);
         } else {
-          reject(new Error(ErrorMessages.UNNOWN_ERROR));
+          reject(new Error(ErrorMessages.UNKNOWN_ERROR));
         }
       });
     });

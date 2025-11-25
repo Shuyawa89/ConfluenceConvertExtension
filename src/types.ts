@@ -24,9 +24,9 @@ export type UIStatusType = typeof UIStatus[keyof typeof UIStatus];
 export const ErrorMessages = {
     NO_ACTIVE_TAB: 'アクティブなタブが見つかりません。',
     CONNECTION_FAILED: 'ページとの通信に失敗しました。ページをリロードして再試行してください。',
+    CLIPBOARD_COPY_FAILED: 'クリップボードへのコピーに失敗しました。',
     UNKNOWN_ERROR: '予期せぬエラーが発生しました。',
     NO_SELECTION: '選択範囲が見つかりません。テキストを選択してから再試行してください。',
-    COPY_FAILED: 'クリップボードへのコピーに失敗しました。',
 } as const;
 
 // リクストメッセージの型

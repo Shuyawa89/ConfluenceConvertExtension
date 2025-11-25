@@ -76,7 +76,7 @@ async function copyToClipboard(text: string, tabId: number): Promise<void> {
         console.log('Copied to clipboard successfully');
     } catch (error) {
         console.error('Failed to copy to clipboard:', error);
-        await showErrorNotification(ErrorMessages.COPY_FAILED);
+        await showErrorNotification(ErrorMessages.CLIPBOARD_COPY_FAILED);
         // Removed re-throw to prevent duplicate error notifications
     }
 }

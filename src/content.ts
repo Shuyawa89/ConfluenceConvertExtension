@@ -102,7 +102,7 @@ async function handleClipboardCopy(text: string, sendResponse: (response: Extens
         sendResponse({ success: true, data: 'Copied to clipboard' });
     } catch (error) {
         console.error('Error copying to clipboard:', error);
-        sendResponse({ success: false, error: ErrorMessages.COPY_FAILED });
+        sendResponse({ success: false, error: ErrorMessages.CLIPBOARD_COPY_FAILED });
     }
 }
 
