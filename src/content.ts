@@ -6,7 +6,7 @@ console.log("Confluence to Markdown: Content script loaded");
 
 chrome.runtime.onMessage.addListener((
     request: unknown,
-    sender: chrome.runtime.MessageSender,
+    _sender: chrome.runtime.MessageSender,
     sendResponse: (response: ExtensionResponse) => void
 ) => {
     if (!isValidMessage(request)) {

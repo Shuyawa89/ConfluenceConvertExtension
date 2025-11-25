@@ -1,4 +1,5 @@
 import TurndownService from 'turndown';
+// @ts-expect-error - turndown-plugin-gfm has no type definitions
 import { gfm } from 'turndown-plugin-gfm';
 import {
     HtmlPreprocessor,
@@ -34,7 +35,7 @@ export class MarkdownConverter {
         // 画像処理のカスタムルールを追加
         this.turndownService.addRule('images', {
             filter: 'img',
-            replacement: (content, node) => {
+            replacement: (_content, node) => {
                 const img = node as HTMLImageElement;
                 const src = this.extractImageSrc(img);
                 const alt = img.alt || '';
