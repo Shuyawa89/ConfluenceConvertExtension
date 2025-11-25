@@ -57,7 +57,7 @@ function handleConversion(sendResponse: (response: ExtensionResponse) => void): 
         sendResponse({ success: true, data: markdown });
     } catch (error) {
         console.error('Error converting to Markdown:', error);
-        const errorMessage = error instanceof Error ? error.message : ErrorMessages.UNNOWN_ERROR;
+        const errorMessage = error instanceof Error ? error.message : ErrorMessages.UNKNOWN_ERROR;
         sendResponse({ success: false, error: errorMessage });
     }
 }
@@ -88,7 +88,7 @@ function handleSelectionConversion(sendResponse: (response: ExtensionResponse) =
         sendResponse({ success: true, data: markdown });
     } catch (error) {
         console.error('Error converting selection to Markdown:', error);
-        const errorMessage = error instanceof Error ? error.message : ErrorMessages.UNNOWN_ERROR;
+        const errorMessage = error instanceof Error ? error.message : ErrorMessages.UNKNOWN_ERROR;
         sendResponse({ success: false, error: errorMessage });
     }
 }
@@ -96,14 +96,13 @@ function handleSelectionConversion(sendResponse: (response: ExtensionResponse) =
 /**
  * クリップボードにテキストをコピーする
  */
-function handleClipboardCopy(text: string, sendResponse: (response: ExtensionResponse) => void): void {
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            sendResponse({ success: true, data: 'Copied to clipboard' });
-        })
-        .catch((error) => {
-            console.error('Error copying to clipboard:', error);
-            sendResponse({ success: false, error: ErrorMessages.COPY_FAILED });
-        });
+async function handleClipboardCopy(text: string, sendResponse: (response: ExtensionResponse) => void): Promise<void> {
+    try {
+        await navigator.clipboard.writeText(text);
+        sendResponse({ success: true, data: 'Copied to clipboard' });
+    } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        sendResponse({ success: false, error: ErrorMessages.COPY_FAILED });
+    }
 }
 

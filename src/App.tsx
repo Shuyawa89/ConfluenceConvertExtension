@@ -53,7 +53,7 @@ function App() {
       }
     } catch (error) {
       // 通信エラーなどのシステムエラー
-      const errorMessage = error instanceof Error ? error.message : ErrorMessages.UNNOWN_ERROR;
+      const errorMessage = error instanceof Error ? error.message : ErrorMessages.UNKNOWN_ERROR;
       setError(errorMessage);
       setStatus(UIStatus.ERROR);
     }

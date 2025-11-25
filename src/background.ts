@@ -45,7 +45,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         // メニュー項目に応じて処理を分岐
         if (info.menuItemId === 'convertAndCopy') {
             // クリップボードにコピー
-            await copyToClipboard(markdown);
+            await copyToClipboard(markdown, tab.id);
         } else if (info.menuItemId === 'convertAndShow') {
             // ポップアップで表示するためにストレージに保存
             await chrome.storage.local.set({ selectionMarkdown: markdown });
@@ -56,7 +56,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         console.error('Error handling context menu click:', error);
         // ユーザーにエラーを通知
         await showErrorNotification(
-            error instanceof Error ? error.message : ErrorMessages.UNNOWN_ERROR
+            error instanceof Error ? error.message : ErrorMessages.UNKNOWN_ERROR
         );
     }
 });
@@ -64,16 +64,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 /**
  * クリップボードにテキストをコピーする
  */
-async function copyToClipboard(text: string): Promise<void> {
+async function copyToClipboard(text: string, tabId: number): Promise<void> {
     try {
         // Service Workerではnavigator.clipboardが使えないため、
         // コンテンツスクリプトにコピーを依頼する
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (!tab?.id) {
-            throw new Error(ErrorMessages.NO_ACTIVE_TAB);
-        }
-
-        await chrome.tabs.sendMessage(tab.id, {
+        await chrome.tabs.sendMessage(tabId, {
             action: MessageActions.COPY_TO_CLIPBOARD,
             payload: text
         });
@@ -82,7 +77,7 @@ async function copyToClipboard(text: string): Promise<void> {
     } catch (error) {
         console.error('Failed to copy to clipboard:', error);
         await showErrorNotification(ErrorMessages.COPY_FAILED);
-        throw error;
+        // Removed re-throw to prevent duplicate error notifications
     }
 }
 
