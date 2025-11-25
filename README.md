@@ -1,11 +1,63 @@
-# React + TypeScript + Vite
+# Confluence to Markdown
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ConfluenceページをMarkdown形式に変換するChrome拡張機能です。
 
-Currently, two official plugins are available:
+## 機能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Confluenceページ全体をMarkdownに変換
+- 選択した範囲のみをMarkdownに変換
+- 変換結果をクリップボードにコピー
+
+## 開発環境のセットアップ
+
+```bash
+# 依存関係のインストール
+pnpm install
+
+# 開発サーバーの起動
+pnpm run dev
+```
+
+開発時は `chrome://extensions/` で「パッケージ化されていない拡張機能を読み込む」から `dist` ディレクトリを選択してください。
+
+## 配布用パッケージの作成
+
+拡張機能を他の人と共有する場合は、以下の手順でZIPファイルを作成します：
+
+```bash
+# ビルド & ZIP作成
+pnpm run package
+```
+
+このコマンドは以下を実行します：
+1. プロジェクトをビルド (`pnpm run build`)
+2. `dist` ディレクトリの内容を `confluence-md-extension.zip` として圧縮
+
+作成された `confluence-md-extension.zip` を共有してください。
+
+## インストール方法（受け取った人向け）
+
+1. 受け取った `confluence-md-extension.zip` を解凍します
+2. Chromeブラウザを開き、`chrome://extensions/` にアクセスします
+3. 右上の「デベロッパーモード」をオンにします
+4. 「パッケージ化されていない拡張機能を読み込む」をクリックします
+5. 解凍したディレクトリを選択します
+6. 拡張機能がインストールされ、使用可能になります
+
+## 使い方
+
+1. Confluenceページを開きます
+2. 拡張機能アイコンをクリックします
+3. 以下のいずれかを選択します：
+   - 「Convert Entire Page」: ページ全体を変換
+   - 「Convert Selected Area」: 選択範囲のみを変換
+4. 変換されたMarkdownが自動的にクリップボードにコピーされます
+
+## 技術スタック
+
+- React + TypeScript
+- Vite
+- @crxjs/vite-plugin (Chrome拡張機能開発用)
 
 ## React Compiler
 
