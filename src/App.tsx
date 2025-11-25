@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { MessageActions, UIStatus, ErrorMessages } from './types'
 import type { UIStatusType, ExtensionResponse, ExtensionMessage } from './types';
+import { getUrlPatterns } from './storage'
+import { testUrlAgainstPattern } from './urlPatternUtils'
+import { ERROR_MESSAGES } from './constants'
 
 function App() {
   const [markdown, setMarkdown] = useState<string>('');
@@ -12,10 +15,17 @@ function App() {
     convertCurrentPage();
   }, []);
 
-  const isConfluencePage = (url: string | undefined): boolean => {
+  const isConfluencePage = async (url: string | undefined): Promise<boolean> => {
     if (!url) return false;
-    // Atlassian Cloud Confluence または /wiki/ パスを含むURL
-    return url.includes('.atlassian.net') || url.includes('/wiki/');
+
+    try {
+      const patterns = await getUrlPatterns();
+      return patterns.some(pattern => testUrlAgainstPattern(url, pattern));
+    } catch (error) {
+      console.error('Failed to load URL patterns:', error);
+      // フォールバック: デフォルトのチェック
+      return url.includes('.atlassian.net') || url.includes('/wiki/');
+    }
   };
 
   const convertCurrentPage = async () => {
@@ -32,8 +42,8 @@ function App() {
       }
 
       // Confluenceページかどうかをチェック
-      if (!isConfluencePage(tab.url)) {
-        throw new Error('このページはConfluenceページではありません。Confluenceページで拡張機能を使用してください。');
+      if (!(await isConfluencePage(tab.url))) {
+        throw new Error(ERROR_MESSAGES.NOT_CONFLUENCE_PAGE);
       }
 
       // Content Script にメッセージを送信

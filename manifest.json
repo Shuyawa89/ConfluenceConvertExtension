@@ -7,13 +7,18 @@
     },
     "permissions": [
         "activeTab",
-        "scripting"
+        "scripting",
+        "storage",
+        "tabs"
     ],
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
     "content_scripts": [
         {
             "matches": [
-                "*://*.atlassian.net/*",
-                "*://*/wiki/*"
+                "*://*.atlassian.net/*"
             ],
             "js": [
                 "src/content.ts"
