@@ -15,6 +15,7 @@ export const UIStatus = {
     LOADING: 'LOADING',
     SUCCESS: 'SUCCESS',
     ERROR: 'ERROR',
+    COPIED: 'COPIED',
 } as const;
 
 // UIステータスの型定義 (UIStatusの値のユニオン型)
